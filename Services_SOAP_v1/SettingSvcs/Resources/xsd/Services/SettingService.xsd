@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.elliemae.com/services/settingservice"
+	xmlns:tns="http://www.elliemae.com/services/settingservice" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+
+	<element name="GetSettingRequest" type="tns:GetSettingRequestType" />
+	<element name="GetSettingResponse" type="tns:GetSettingResponseType" />
+	<element name="GetProductPricingRequest" type="tns:GetProductPricingRequestType" />
+	<element name="GetProductPricingResponse" type="tns:GetProductPricingResponseType" />
+	<element name="GetExternalCompanyNamesRequest" type="tns:GetExternalCompanyNamesRequestType" />
+	<element name="GetExternalCompanyNamesResponse" type="tns:GetExternalCompanyNamesResponseType" />
+
+	<xs:complexType name="GetSettingRequestType">
+		<xs:sequence>
+			<xs:element name="Category" nillable="true" type="xs:string" />
+			<xs:element minOccurs="0" name="Setting" nillable="true"
+				type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GetSettingResponseType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="Category" nillable="true"
+				type="xs:string" />
+			<xs:element minOccurs="0" name="Settings" nillable="true"
+				type="tns:ArrayOfSetting" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOfSetting">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded" name="Setting"
+				nillable="true" type="tns:Setting" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="Setting">
+		<xs:complexContent mixed="false">
+			<xs:extension base="tns:EntityContractBase">
+				<xs:sequence>
+					<xs:element minOccurs="0" name="Name" nillable="true"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="Value" nillable="true"
+						type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="EntityContractBase">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="Id" type="tns:guid" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="guid">
+		<xs:restriction base="xs:string">
+			<xs:pattern
+				value="[\da-fA-F]{8}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{4}-[\da-fA-F]{12}" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="GetProductPricingRequestType">
+		<xs:sequence>
+			<xs:element name="Active" type="xs:boolean" />
+			<xs:element minOccurs="0" name="PartnerID" nillable="true"
+				type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GetProductPricingResponseType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="ProductPricingSettings"
+				nillable="true" type="tns:ProductPricingSettingType" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ProductPricingSettingType">
+		<xs:complexContent mixed="false">
+			<xs:extension base="tns:EntityContractBase">
+				<xs:sequence>
+					<xs:element minOccurs="0" nillable="true" name="Active"
+						type="xs:boolean" />
+					<xs:element minOccurs="0" name="AdminURL" nillable="true"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="ImportToLoan" nillable="true"
+						type="xs:boolean" />
+					<xs:element minOccurs="0" name="IsCustomizeInvestorName"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="MoreInfoURL" nillable="true"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="PartnerID" nillable="true"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="PartnerLockConfirm"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="PartnerName" nillable="true"
+						type="xs:string" />
+					<xs:element minOccurs="0" name="PartnerRequestLock"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="RequestLockOnlyWOCurrentLock"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="SettingsSection"
+						nillable="true" type="xs:string" />
+					<xs:element minOccurs="0" name="ShowSellSide" nillable="true"
+						type="xs:boolean" />
+					<xs:element minOccurs="0" name="SupportsImportToLoan"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="SupportsPartnerLockConfirm"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="SupportsPartnerRequestLock"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="UseCustomizedInvestorName"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="UseInvestorAndLenderName"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="UseOnlyInvestorName"
+						nillable="true" type="xs:boolean" />
+					<xs:element minOccurs="0" name="UseOnlyLenderName"
+						nillable="true" type="xs:boolean" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="GetExternalCompanyNamesRequestType">
+		<xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="GetExternalCompanyNamesResponseType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="ExternalCompanyNames"
+				nillable="true" type="tns:ArrayOfExternalCompanyName" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ArrayOfExternalCompanyName">
+		<xs:sequence>
+			<xs:element minOccurs="0" maxOccurs="unbounded"
+				name="ExternalCompanyName" nillable="true" type="tns:ExternalCompanyName" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ExternalCompanyName">
+		<xs:complexContent mixed="false">
+			<xs:extension base="tns:EntityContractBase">
+				<xs:sequence>
+					<xs:element name="ExternalId" nillable="true" type="xs:string" />
+					<xs:element name="Name" nillable="true" type="xs:string" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+</schema>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml-fragment xmlns:ser="http://www.bea.com/wli/sb/services" xmlns:tran="http://www.bea.com/wli/sb/transports" xmlns:env="http://www.bea.com/wli/config/env" xmlns:http="http://www.bea.com/wli/sb/transports/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:con="http://www.bea.com/wli/sb/typesystem/config" xmlns:jms="http://www.bea.com/wli/sb/transports/jms" xmlns:con1="http://www.bea.com/wli/sb/pipeline/config" xmlns:con2="http://www.bea.com/wli/sb/stages/routing/config" xmlns:con3="http://www.bea.com/wli/sb/stages/config" xmlns:con4="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con5="http://www.bea.com/wli/sb/stages/logging/config">
+  <ser:coreEntry isProxy="true" isEnabled="true" isTracingEnabled="false" isAutoPublish="false">
+    <ser:binding type="Mixed" xsi:type="con:MixedBindingType" xmlns:con="http://www.bea.com/wli/sb/services/bindings/config">
+      <con:request type="XML">
+        <con6:schema ref="Services_SOAP_v1/Shared/Resources/xsd/XMLSchema_-259201014" element="LoanArchiveRequest" xmlns:con6="http://www.bea.com/wli/sb/typesystem/config"/>
+      </con:request>
+    </ser:binding>
+    <ser:monitoring isEnabled="true">
+      <ser:aggregationInterval>120</ser:aggregationInterval>
+      <ser:pipelineMonitoringLevel>Action</ser:pipelineMonitoringLevel>
+    </ser:monitoring>
+    <ser:reporting>true</ser:reporting>
+    <ser:logging isEnabled="true">
+      <ser:logLevel>debug</ser:logLevel>
+    </ser:logging>
+    <ser:sla-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:sla-alerting>
+    <ser:pipeline-alerting isEnabled="true">
+      <ser:alertLevel>normal</ser:alertLevel>
+    </ser:pipeline-alerting>
+    <ser:largeMessageSupport isEnabled="true">
+      <ser:persistToFile>false</ser:persistToFile>
+    </ser:largeMessageSupport>
+    <ser:throttling enabled="false">
+      <ser:capacity>0</ser:capacity>
+      <ser:maxQueueLength>0</ser:maxQueueLength>
+      <ser:timeToLive>0</ser:timeToLive>
+    </ser:throttling>
+    <ser:messageTracing enabled="false">
+      <ser:detailsLevel>Terse</ser:detailsLevel>
+      <ser:maxSize>8192</ser:maxSize>
+    </ser:messageTracing>
+    <ser:transactions isRequired="true" sameTxForResponse="true"/>
+  </ser:coreEntry>
+  <ser:endpointConfig>
+    <tran:provider-id>jms</tran:provider-id>
+    <tran:inbound>true</tran:inbound>
+    <tran:URI>
+      <env:value>jms://ed1vsbosb3005.dco.elmae:11001/jms.loanarchive.connFactory/jms.loanarchive.queue.inbound</env:value>
+    </tran:URI>
+    <tran:inbound-properties/>
+    <tran:all-headers>true</tran:all-headers>
+    <tran:provider-specific xsi:type="jms:JmsEndPointConfiguration">
+      <jms:is-queue>true</jms:is-queue>
+      <jms:is-secure>false</jms:is-secure>
+      <jms:inbound-properties>
+        <jms:response-required>false</jms:response-required>
+        <jms:XA-required>true</jms:XA-required>
+        <jms:transaction-timeout>600</jms:transaction-timeout>
+      </jms:inbound-properties>
+      <jms:request-encoding>UTF-8</jms:request-encoding>
+      <jms:jndi-timeout>0</jms:jndi-timeout>
+    </tran:provider-specific>
+  </ser:endpointConfig>
+  <ser:router errorHandler="_onErrorHandler-4213672055745985422-5dbebd64.1487a7a46ba.-7fe7">
+    <con1:pipeline name="PipelinePairNode1_request" type="request">
+      <con1:stage name="stage1">
+        <con1:context>
+          <con3:varNsDecl prefix="plat" namespace="http://www.elliemae.com/encompass/platform"/>
+        </con1:context>
+        <con1:actions>
+          <con4:report xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+            <con3:id>_ActionId-7760879542359526927-1504ce3b.149e85be746.-7c29</con3:id>
+            <con4:expr>
+              <con3:xqueryText>$inbound</con3:xqueryText>
+            </con4:expr>
+            <con4:labels>
+              <con4:key>JMS_LoanArchiver_HEADER</con4:key>
+              <con4:varName>inbound</con4:varName>
+              <con4:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con4:value>
+            </con4:labels>
+          </con4:report>
+          <con4:report xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+            <con3:id>_ActionId-7760879542359526927-1504ce3b.149e85be746.-7cec</con3:id>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$body</con:xqueryText>
+            </con4:expr>
+            <con4:labels>
+              <con4:key>JMS_LoanArchiver_RECEIVED</con4:key>
+              <con4:varName>inbound</con4:varName>
+              <con4:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con4:value>
+            </con4:labels>
+          </con4:report>
+          <con4:assign varName="origBody">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fbd</con3:id>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$body/plat:LoanArchiveRequest</con:xqueryText>
+            </con4:expr>
+          </con4:assign>
+          <con4:assign varName="soapSecurityHeader">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fb8</con3:id>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">fn-bea:inlinedXML($inbound/ctx:transport/ctx:request/tp:headers/tp:user-header[@name='SecurityContext']/@value)</con:xqueryText>
+            </con4:expr>
+          </con4:assign>
+          <con4:replace varName="header" contents-only="true">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fb9</con3:id>
+            <con4:location>
+              <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">.</con:xpathText>
+            </con4:location>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$soapSecurityHeader</con:xqueryText>
+            </con4:expr>
+          </con4:replace>
+          <con4:report xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fbb</con3:id>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$body</con:xqueryText>
+            </con4:expr>
+            <con4:labels>
+              <con4:key>JMS_LoanArchiver_RECEIVED</con4:key>
+              <con4:varName>inbound</con4:varName>
+              <con4:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con4:value>
+            </con4:labels>
+          </con4:report>
+          <con4:report xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fb7</con3:id>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$header</con:xqueryText>
+            </con4:expr>
+            <con4:labels>
+              <con4:key>JMS_LoanArchiver_HEADER</con4:key>
+              <con4:varName>inbound</con4:varName>
+              <con4:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con4:value>
+            </con4:labels>
+          </con4:report>
+        </con1:actions>
+      </con1:stage>
+      <con1:stage name="DirectoryServiceCall">
+        <con1:context xmlns:con3="http://www.bea.com/wli/sb/stages/logging/config" xmlns:con5="http://www.bea.com/wli/sb/stages/alert/config">
+          <con6:userNsDecl namespace="http://www.elliemae.com/encompass/directory" prefix="dir" xmlns:con6="http://www.bea.com/wli/sb/stages/config"/>
+          <con6:varNsDecl prefix="elli" namespace="http://schemas.datacontract.org/2004/07/Elli.EncompassPlatform.Common.DataContracts" xmlns:con6="http://www.bea.com/wli/sb/stages/config"/>
+          <con6:varNsDecl prefix="plat" namespace="http://www.elliemae.com/encompass/platform" xmlns:con6="http://www.bea.com/wli/sb/stages/config"/>
+        </con1:context>
+        <con1:actions xmlns:con3="http://www.bea.com/wli/sb/stages/logging/config" xmlns:con5="http://www.bea.com/wli/sb/stages/alert/config">
+          <con4:assign varName="loanArchivePayload" xmlns:con3="http://www.bea.com/wli/sb/stages/alert/config">
+            <con6:id xmlns:con6="http://www.bea.com/wli/sb/stages/config">_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7de5</con6:id>
+            <con4:expr>
+              <con5:xqueryText xmlns:con5="http://www.bea.com/wli/sb/stages/config">$body</con5:xqueryText>
+            </con4:expr>
+          </con4:assign>
+          <con5:assign varName="instanceId" xmlns:con5="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con3="http://www.bea.com/wli/sb/stages/alert/config">
+            <con6:id xmlns:con6="http://www.bea.com/wli/sb/stages/config">_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7de4</con6:id>
+            <con5:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">fn:substring-before($header/plat:SecurityContext/plat:SessionId/text(), '_')</con:xqueryText>
+            </con5:expr>
+          </con5:assign>
+          <con4:wsCallout>
+            <con6:id xmlns:con6="http://www.bea.com/wli/sb/stages/config">_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7de1</con6:id>
+            <con4:service xsi:type="ref:ProxyRef" ref="DirectorySvcs_SOAP_v1/DirectorySvcs/ProxyServices/DirectorySvcs_ps" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con4:operation>GetSettings</con4:operation>
+            <con4:request>
+              <con4:body wrapped="true">$body</con4:body>
+              <con4:header/>
+            </con4:request>
+            <con4:response>
+              <con4:body wrapped="true">body</con4:body>
+              <con4:header/>
+            </con4:response>
+            <con4:requestTransform>
+              <con5:replace varName="body" contents-only="true" xmlns:con3="http://www.bea.com/wli/sb/stages/alert/config" xmlns:con5="http://www.bea.com/wli/sb/stages/transform/config">
+                <con6:id xmlns:con6="http://www.bea.com/wli/sb/stages/config">_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7de3</con6:id>
+                <con5:location>
+                  <con6:xpathText xmlns:con6="http://www.bea.com/wli/sb/stages/config">.</con6:xpathText>
+                </con5:location>
+                <con5:expr>
+                  <con6:xqueryText xmlns:con6="http://www.bea.com/wli/sb/stages/config"><![CDATA[<dir:GetSettingsRequest>
+         <dir:InstanceID>{$instanceId}</dir:InstanceID>
+         <dir:Category>Host</dir:Category>
+         <dir:Settings>
+            <dir:Setting>
+               <dir:Name>EncompassPlatformAPI</dir:Name>
+               <dir:Value>?</dir:Value>
+            </dir:Setting>
+         </dir:Settings>
+</dir:GetSettingsRequest>]]></con6:xqueryText>
+                </con5:expr>
+              </con5:replace>
+            </con4:requestTransform>
+            <con4:responseTransform>
+              <con5:assign varName="targetURL" xmlns:con3="http://www.bea.com/wli/sb/stages/alert/config" xmlns:con5="http://www.bea.com/wli/sb/stages/transform/config">
+                <con6:id xmlns:con6="http://www.bea.com/wli/sb/stages/config">_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7de2</con6:id>
+                <con5:expr>
+                  <con6:xqueryText xmlns:con6="http://www.bea.com/wli/sb/stages/config">fn:concat('http://',$body/dir:GetSettingsResponse/dir:Settings/dir:Setting/dir:Value/text(),'/EncompassPlatform/PlatformService.svc')</con6:xqueryText>
+                </con5:expr>
+              </con5:assign>
+            </con4:responseTransform>
+          </con4:wsCallout>
+          <con4:assign varName="body" xmlns:con3="http://www.bea.com/wli/sb/stages/alert/config">
+            <con6:id xmlns:con6="http://www.bea.com/wli/sb/stages/config">_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7de0</con6:id>
+            <con4:expr>
+              <con6:xqueryText xmlns:con6="http://www.bea.com/wli/sb/stages/config">$loanArchivePayload</con6:xqueryText>
+            </con4:expr>
+          </con4:assign>
+        </con1:actions>
+      </con1:stage>
+    </con1:pipeline>
+    <con1:pipeline name="PipelinePairNode1_response" type="response">
+      <con1:stage name="stage1">
+        <con1:context>
+          <con3:varNsDecl prefix="plat" namespace="http://www.elliemae.com/encompass/platform"/>
+        </con1:context>
+        <con1:actions>
+          <con:report xmlns:con="http://www.bea.com/wli/sb/stages/logging/config">
+            <con1:id xmlns:con1="http://www.bea.com/wli/sb/stages/config">_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fc3</con1:id>
+            <con:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$origBody</con:xqueryText>
+            </con:expr>
+            <con:labels>
+              <con:key>JMS_LoanArchiver_SENT</con:key>
+              <con:varName>inbound</con:varName>
+              <con:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con:value>
+            </con:labels>
+          </con:report>
+          <con5:report>
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7cd7</con3:id>
+            <con5:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$header</con:xqueryText>
+            </con5:expr>
+            <con5:labels>
+              <con5:key>header-success</con5:key>
+              <con5:varName>header</con5:varName>
+              <con5:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con5:value>
+            </con5:labels>
+          </con5:report>
+        </con1:actions>
+      </con1:stage>
+    </con1:pipeline>
+    <con1:pipeline name="_onErrorHandler-4213672055745985422-5dbebd64.1487a7a46ba.-7fe7" type="error">
+      <con1:stage name="stage1">
+        <con1:context>
+          <con3:varNsDecl prefix="plat" namespace="http://www.elliemae.com/encompass/platform"/>
+        </con1:context>
+        <con1:actions>
+          <con4:report xmlns:con4="http://www.bea.com/wli/sb/stages/logging/config">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fe6</con3:id>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$body</con:xqueryText>
+            </con4:expr>
+            <con4:labels>
+              <con4:key>JMS_LoanArchiver_ERROR</con4:key>
+              <con4:varName>inbound</con4:varName>
+              <con4:value>
+                <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">./@name</con:xpathText>
+              </con4:value>
+            </con4:labels>
+          </con4:report>
+          <con4:replace varName="body" contents-only="true">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fbc</con3:id>
+            <con4:location>
+              <con:xpathText xmlns:con="http://www.bea.com/wli/sb/stages/config">.</con:xpathText>
+            </con4:location>
+            <con4:expr>
+              <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$origBody</con:xqueryText>
+            </con4:expr>
+          </con4:replace>
+          <con4:route xmlns:con4="http://www.bea.com/wli/sb/stages/publish/config">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fbf</con3:id>
+            <con4:service ref="Services_SOAP_v1/LoanSvcs/BusinessServices/JMS_LoanArchiveErrs_bs" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con4:outboundTransform/>
+          </con4:route>
+          <con3:reply isError="false">
+            <con3:id>_ActionId-4213672055745985422-5dbebd64.1487a7a46ba.-7fc2</con3:id>
+          </con3:reply>
+        </con1:actions>
+      </con1:stage>
+    </con1:pipeline>
+    <con1:flow>
+      <con1:pipeline-node name="PipelinePairNode1">
+        <con1:request>PipelinePairNode1_request</con1:request>
+        <con1:response>PipelinePairNode1_response</con1:response>
+      </con1:pipeline-node>
+      <con1:route-node name="RouteToPlatformArchiveSvc">
+        <con1:context/>
+        <con1:actions>
+          <con2:route>
+            <con3:id>_ActionId-1496491837774833477-11498de2.1483d3b2c57.-7f54</con3:id>
+            <con2:service ref="Services_SOAP_v1/Shared/BusinessServices/PlatformService_bs" xsi:type="ref:BusinessServiceRef" xmlns:ref="http://www.bea.com/wli/sb/reference"/>
+            <con2:operation>LoanArchive</con2:operation>
+            <con2:outboundTransform>
+              <con3:routing-options xmlns:con4="http://www.bea.com/wli/sb/stages/alert/config" xmlns:con6="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con3="http://www.bea.com/wli/sb/stages/transform/config" xmlns:con5="http://www.bea.com/wli/sb/stages/alert/config" xmlns:con="http://www.bea.com/wli/sb/pipeline/config" xmlns:con1="http://www.bea.com/wli/sb/stages/config">
+                <con1:id>_ActionId-1324194899160290881-a5b3c79.14a116a695b.-7d86</con1:id>
+                <con3:uriExpr>
+                  <con:xqueryText xmlns:con="http://www.bea.com/wli/sb/stages/config">$targetURL</con:xqueryText>
+                </con3:uriExpr>
+              </con3:routing-options>
+            </con2:outboundTransform>
+            <con2:responseTransform/>
+          </con2:route>
+        </con1:actions>
+      </con1:route-node>
+    </con1:flow>
+  </ser:router>
+</xml-fragment>
